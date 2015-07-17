@@ -51,25 +51,28 @@ class InvalidArguments(ValueError):
 
 
 ts3_escape = [
-     (chr(92), r'\\'),   # \
-     (chr(47), r"\/"),   # /
-     (chr(32), r'\s'),   # Space
-     (chr(124), r'\p'),  # |
-     (chr(7), r'\a'),    # Bell
-     (chr(8), r'\b'),    # Backspace
-     (chr(12), r'\f'),   # Form Feed
-     (chr(10), r'\n'),   # Newline
-     (chr(13), r'\r'),   # Carriage Return
-     (chr(9), r'\t'),    # Horizontal Tab
-     (chr(11), r'\v'),   # Vertical tab
+    (chr(92), r'\\'),   # \
+    (chr(47), r"\/"),   # /
+    (chr(32), r'\s'),   # Space
+    (chr(124), r'\p'),  # |
+    (chr(7), r'\a'),    # Bell
+    (chr(8), r'\b'),    # Backspace
+    (chr(12), r'\f'),   # Form Feed
+    (chr(10), r'\n'),   # Newline
+    (chr(13), r'\r'),   # Carriage Return
+    (chr(9), r'\t'),    # Horizontal Tab
+    (chr(11), r'\v'),   # Vertical tab
 ]
 
 
 class TS3Response():
     def __init__(self, response, data):
+        if type(response) == bytes:
+            response = str(response, 'utf-8')
+        if type(data) == bytes:
+            data = str(data, 'utf-8')
         self.response = TS3Proto.parse_response(response)
         self.data = TS3Proto.parse_data(data)
-
         if isinstance(self.data, dict):
             if self.data:
                 self.data = [self.data]
@@ -131,11 +134,10 @@ class TS3Proto():
             data = ''
             response = self._telnet.read_until(b"\n\r", self._timeout)
 
-        if not response.startswith("error"):
+        if not response.startswith(b"error"):
             # what we just got was extra data
             data = response
             response = self._telnet.read_until(b"\n\r", self._timeout)
-
         return TS3Response(response, data)
 
     def check_connection(self):
@@ -199,7 +201,6 @@ class TS3Proto():
         @param data: data string
         @type data: string
         """
-
         data = data.strip()
 
         multipart = data.split('|')
@@ -228,7 +229,6 @@ class TS3Proto():
                 # TS3 Query Server may sometimes return a key without any value
                 # and we default its value to None
                 parsed_data[chunk[0]] = None
-
         return parsed_data
 
     @staticmethod
@@ -264,5 +264,4 @@ class TS3Proto():
 
         for i, j in ts3_escape:
             value = value.replace(j, i)
-
         return value

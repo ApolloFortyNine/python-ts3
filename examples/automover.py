@@ -13,17 +13,17 @@ them every 5 seconds
 # name: defines a fixed name for that user, will kick them after warning
 # destination: forces a user into a particular channel.
 moveids = {
-    4306: {'name': 'daley', 'destination': 405}
+    3: {'name': 'Ryan', 'destination': 2}
 }
 
 ####
 
 server = TS3Server('127.0.0.1', 10011, 1)
-server.login('serveradmin', 'supersecretpassword')
+server.login('serveradmin', 'MHXK0WcN')
 
 print("Logged In")
 
-poke = []
+poke = {}
 
 while True:
     clientlist = server.clientlist()
@@ -38,6 +38,8 @@ while True:
             if 'destination' in clinfo and not int(client['cid']) == clinfo['destination']:
                 if server.send_command('clientmove', keys={'clid': client['clid'], 'cid': clinfo['destination']}).is_successful:
                     print("Moved %s to Channel %s" % (client['client_nickname'], clinfo['destination']))
+                    # Working poke command
+                    # server.send_command('clientpoke', keys={'clid': client['clid'], 'msg': 'Change your name to "%s"! Warning %s of 3' % (clinfo['name'], 1)})
 
             # If we have a fixed name defined, tell them to change it or kick them
             if 'name' in clinfo and not client['client_nickname'] == clinfo['name']:
