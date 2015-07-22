@@ -29,7 +29,7 @@ from .protocol import TS3Proto, TS3Response, ConnectionError, NoConnectionError,
 from .server import TS3Server
 from .defines import *
 
-__version__ = "0.1"
+__version__ = "1.0"
 __license__ = "BSD 3-Clause"
 __copyright__ = "Copyright 2011, Andrew Williams"
-__author__ = "Andrew Williams, Krzysztof Jagiello"
+__author__ = "Andrew Williams, Krzysztof Jagiello, Ryan Quinn"
